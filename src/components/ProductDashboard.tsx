@@ -67,13 +67,24 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 const ProductDashboard = () => {
-  // Add 70 more headers to the product table
-  const extraHeaders = Array.from({ length: 70 }, (_, i) => ({
-    key: `extra${i + 1}`,
-    label: `Extra ${i + 1}`,
-  }));
 
-  const [products, setProducts] = useState<Product[]>([
+  const extraHeaders = [];
+  for (let i = 1; i <= 70; i++) {
+    extraHeaders.push({
+      key: 'extra' + i,
+      label: 'Extra ' + i
+    });
+  }
+
+  function getExtraColumnData() {
+    const extraData = {};
+    for (const header of extraHeaders) {
+      extraData[header.key] = 'Value ' + header.label;
+    }
+    return extraData;
+  }
+
+  const [products, setProducts] = useState([
     {
       id: "PROD001",
       name: "Wireless Headphones",
@@ -82,7 +93,7 @@ const ProductDashboard = () => {
       availability: "In Stock",
       imageUrl:
         "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop",
-      ...Object.fromEntries(extraHeaders.map((h) => [h.key, `Value ${h.label}`]))
+      ...getExtraColumnData()
     },
     {
       id: "PROD002",
@@ -92,7 +103,7 @@ const ProductDashboard = () => {
       availability: "Low Stock",
       imageUrl:
         "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=400&fit=crop",
-      ...Object.fromEntries(extraHeaders.map((h) => [h.key, `Value ${h.label}`]))
+      ...getExtraColumnData()
     },
     {
       id: "PROD003",
@@ -102,7 +113,7 @@ const ProductDashboard = () => {
       availability: "In Stock",
       imageUrl:
         "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop",
-      ...Object.fromEntries(extraHeaders.map((h) => [h.key, `Value ${h.label}`]))
+      ...getExtraColumnData()
     },
     {
       id: "PROD004",
@@ -112,7 +123,7 @@ const ProductDashboard = () => {
       availability: "Out of Stock",
       imageUrl:
         "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=400&h=400&fit=crop",
-      ...Object.fromEntries(extraHeaders.map((h) => [h.key, `Value ${h.label}`]))
+      ...getExtraColumnData()
     },
     {
       id: "PROD005",
@@ -122,7 +133,7 @@ const ProductDashboard = () => {
       availability: "In Stock",
       imageUrl:
         "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=400&fit=crop",
-      ...Object.fromEntries(extraHeaders.map((h) => [h.key, `Value ${h.label}`]))
+      ...getExtraColumnData()
     },
   ]);
 

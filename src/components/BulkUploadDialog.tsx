@@ -209,10 +209,22 @@ const BulkUploadDialog = ({ open, onOpenChange, onUpload }: BulkUploadDialogProp
   };
 
   const downloadTemplate = () => {
-    // Add 70 extra headers
-    const extraHeaders = Array.from({ length: 70 }, (_, i) => `extra${i + 1}`);
-    // Generate long string for each extra column
-    const longString = (i: number) => `Value ${i + 1} - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur consectetur, nisl nisi euismod nisi, euismod euismod nisi.`.repeat(2).slice(0, 120);
+    // Create 70 extra column keys for the template in a beginner-friendly way
+    const extraColumnKeys = [];
+    for (let i = 1; i <= 70; i++) {
+      extraColumnKeys.push('extra' + i); // e.g. extra1, extra2, ...
+    }
+
+    // Helper function to generate extra column data for a template row
+    function getExtraColumnData() {
+      const extraData = {};
+      for (let i = 1; i <= 70; i++) {
+        // Generate a long string for each extra column
+        extraData['extra' + i] = 'Value Extra ' + i + ' - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur consectetur, nisl nisi euismod nisi, euismod euismod nisi.'.repeat(2).slice(0, 120);
+      }
+      return extraData;
+    }
+
     const template = [
       {
         id: 'PROD001',
@@ -221,7 +233,7 @@ const BulkUploadDialog = ({ open, onOpenChange, onUpload }: BulkUploadDialogProp
         brand: 'Sample Brand',
         availability: 'In Stock',
         imageUrl: '',
-        ...Object.fromEntries(extraHeaders.map((h, i) => [h, longString(i)]))
+        ...getExtraColumnData()
       },
       {
         id: 'PROD002',
@@ -230,7 +242,7 @@ const BulkUploadDialog = ({ open, onOpenChange, onUpload }: BulkUploadDialogProp
         brand: 'Another Brand',
         availability: 'Low Stock',
         imageUrl: '',
-        ...Object.fromEntries(extraHeaders.map((h, i) => [h, longString(i)]))
+        ...getExtraColumnData()
       }
     ];
     const csv = Papa.unparse(template);
