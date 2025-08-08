@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, FileSpreadsheet, AlertCircle, CheckCircle } from "lucide-react";
-import * as Papa from "papaparse";
+import Papa from "papaparse";
 import * as XLSX from "xlsx";
 import { Product, BulkUploadResult } from "@/types/product";
 import { useToast } from "@/hooks/use-toast";
@@ -80,6 +80,7 @@ const BulkUploadDialog = ({ open, onOpenChange, onUpload }: BulkUploadDialogProp
 
     data.forEach((row, index) => {
       const rowNumber = index + 2; // +2 because index is 0-based and we skip header
+      
       try {
         // Normalize field names (case insensitive)
         const normalizedRow: any = {};
@@ -122,17 +123,12 @@ const BulkUploadDialog = ({ open, onOpenChange, onUpload }: BulkUploadDialogProp
           normalizedAvailability = 'Low Stock';
         }
 
-        // Collect all extra columns
-        const extraFields: { [key: string]: string | number | undefined } = {};
-        Object.keys(normalizedRow).forEach(key => {
-          if (
-            key.startsWith('extra') &&
-            (typeof normalizedRow[key] === 'string' || typeof normalizedRow[key] === 'number')
-          ) {
+        var extraFields = {};
+        for (var key in normalizedRow) {
+          if (key.startsWith('extra') && (typeof normalizedRow[key] === 'string' || typeof normalizedRow[key] === 'number')) {
             extraFields[key] = normalizedRow[key];
           }
-        });
-
+        }
         successful.push({
           id,
           name,
@@ -209,30 +205,27 @@ const BulkUploadDialog = ({ open, onOpenChange, onUpload }: BulkUploadDialogProp
   };
 
   const downloadTemplate = () => {
-    // Create 70 extra column keys for the template in a beginner-friendly way
     const extraColumnKeys = [];
     for (let i = 1; i <= 70; i++) {
-      extraColumnKeys.push('extra' + i); // e.g. extra1, extra2, ...
+      extraColumnKeys.push('extra' + i); 
     }
 
-    // Helper function to generate extra column data for a template row
     function getExtraColumnData() {
       const extraData = {};
       for (let i = 1; i <= 70; i++) {
-        // Generate a long string for each extra column
         extraData['extra' + i] = 'Value Extra ' + i + ' - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur consectetur, nisl nisi euismod nisi, euismod euismod nisi.'.repeat(2).slice(0, 120);
       }
       return extraData;
     }
 
     const template = [
-      {
+       {
         id: 'PROD001',
         name: 'Sample Product',
         price: 29.99,
         brand: 'Sample Brand',
         availability: 'In Stock',
-        imageUrl: '',
+        imageUrl: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop',
         ...getExtraColumnData()
       },
       {
@@ -241,10 +234,38 @@ const BulkUploadDialog = ({ open, onOpenChange, onUpload }: BulkUploadDialogProp
         price: 49.99,
         brand: 'Another Brand',
         availability: 'Low Stock',
-        imageUrl: '',
+        imageUrl: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop',
+        ...getExtraColumnData()
+      },
+          {
+        id: 'PROD003',
+        name: 'Another Product2',
+        price: 49.99,
+        brand: 'Another Brand',
+        availability: 'Low Stock',
+        imageUrl: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop',
+        ...getExtraColumnData()
+      },
+          {
+        id: 'PROD004',
+        name: 'Another Product3',
+        price: 4.99,
+        brand: 'Another Brand',
+        availability: 'Low Stock',
+        imageUrl: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop',
+        ...getExtraColumnData()
+      },
+          {
+        id: 'PROD005',
+        name: 'Another Product4',
+        price: 9.99,
+        brand: 'Another Brand',
+        availability: 'Low Stock',
+        imageUrl: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop',
         ...getExtraColumnData()
       }
     ];
+    
     const csv = Papa.unparse(template);
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
