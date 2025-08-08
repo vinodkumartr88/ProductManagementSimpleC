@@ -472,6 +472,7 @@ const ProductDashboard = () => {
           src={product.imageUrl}
           alt={product.name}
           className="w-12 h-12 object-cover rounded-md cursor-pointer"
+          loading="lazy"
         />
         {isHovered && (
           <div className="absolute z-50 top-14 left-0 bg-popover border rounded-lg shadow-lg p-2">
